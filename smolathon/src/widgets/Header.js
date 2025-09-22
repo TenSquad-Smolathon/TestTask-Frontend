@@ -1,9 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '../static/images/logo.svg';
 import '../static/styles/Header.css';
 import { Button } from './Button';
 import Dropdown from './DropdownMenu';
 
 export const Header = () => {
+    const navigate = useNavigate();
+
     return (
         <header>
             <div className='logo'>
@@ -13,14 +16,14 @@ export const Header = () => {
 
             <div className='nav'>
                 <Dropdown value="Проекты" options={[
-                    <Button text="Проект 1" isOnBright={false} />,
-                    <Button text="Проект 2" isOnBright={false} />
+                    <Button text="Жалоба на дороги" isOnBright={false} />,
+                    <Button text="Светофоры 2.0" isOnBright={false} />
                 ]} />
 
                 <Dropdown value="Услуги" options={[
-                    <Button text="Вызов эвакуатора"/>,
-                    <Button text="Аренда автовышки"/>,
-                    <Button text="Документация"/>,
+                    <Button text="Вызов эвакуатора" onClick={() => navigate("/services/evacuate")}/>,
+                    <Button text="Аренда автовышки" onClick={() => navigate("/services/rent-auto")}/>,
+                    <Button text="Документация"  onClick={() => navigate("/services/documents")}/>,
                 ]} />
 
                 <Dropdown value="Другое" options={[
@@ -30,8 +33,8 @@ export const Header = () => {
                     <Button text="Команда" />,
                 ]} />
 
-                <Button text="Новости" />
-                <Button text="Статьи" />
+                <Button text="Новости" onClick={() => navigate("/news")}/>
+                <Button text="Статьи" onClick={() => navigate("/articles")} />
 
                 <Button text="О ЦОДД" isAccent="true" />
             </div>
