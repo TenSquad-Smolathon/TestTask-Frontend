@@ -1,0 +1,43 @@
+header {
+    width: calc(100% - 80px);
+    height: auto;
+
+    padding: 10px 40px;
+
+    background-color: black;
+    box-shadow: 0px 4px 2px black;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    z-index: 10;
+}
+
+header .logo p.header-title {
+    font-size: 25px;
+    color: #fff;
+    font-weight: 700;
+
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+header .logo {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+header .nav {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
