@@ -1,0 +1,68 @@
+.m1 .left-side .heart {
+    margin-top: 30px;
+}
+
+.m1 {
+    height: 100lvh;
+
+    overflow: hidden;
+
+    padding-top: 60px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.m1 .left-side {
+    min-width: 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.m1 .left-side h1 {
+    margin: 0;
+}
+
+.m1 .left-side p {
+    margin: 0;
+    white-space: pre-line;
+    font-weight: 600;
+}
+
+.m1 .right-side {
+    display: flex;
+    flex-direction: row;
+}
+
+.m1 .right-side img {
+    height: 100%;
+    object-fit: cover;
+    border-bottom-left-radius: 65%;
+}
+
+.m1 .right-side .whitespace {
+    height: 101vh;
+    width: 60px;
+    border-radius: 100%;
+    background-color: white;
+    z-index: 1;
+    transform: translateX(30px);
+}
+
+.m2 {
+    height: 100lvh;
+
+    overflow: hidden;
+
+    padding-top: 60px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.m1 .actionButtons {
+    display: flex;
+    flex-direction: row;
+}

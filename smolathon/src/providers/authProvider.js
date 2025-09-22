@@ -10,6 +10,8 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const initAuth = async () => {
+            return;
+            
             if (token) {
                 try {
                     // Verify token with backend
@@ -42,6 +44,10 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const loginAction = async (data) => {
+        setToken("TOKEN"); // TODO: REMOVE
+        localStorage.setItem("token", "TOKEN!");
+        return token != null;
+
         try {
             const response = await axios.post('/api/login', data);
             const res = response.data;
