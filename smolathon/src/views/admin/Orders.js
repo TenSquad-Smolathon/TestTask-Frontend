@@ -1,14 +1,13 @@
 import { AdminHeader } from './Header';
 
-export const AdminRedactor = () => {
+export const AdminOrders = () => {
     return (
         <div className='admin-root'>
             <AdminHeader />
 
             <div className="screen">
                 <div style={{ height: "20px" }} />
-                <h1>Редактор содержимого страниц</h1>
-
+                <h1>Заявки на оказание услуг</h1>
             </div>
         </div>
     );

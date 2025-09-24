@@ -1,7 +1,8 @@
 import { Header } from "../widgets/Header";
 // import { ReactComponent as Heart } from '../static/images/heart.svg';
-import RoadBG from '../static/images/road.jpg';
+import RoadBG from '../static/images/road.webp';
 import { ReactComponent as Heart } from '../static/images/heart.svg';
+import { ReactComponent as CrossLine } from '../static/images/crossline.svg';
 import "../static/styles/Landing.css";
 import { Button } from "../widgets/Button";
 
@@ -14,11 +15,12 @@ export const Landing = () => {
                 <div className="left-side">
 
                     <h1>Центр организации дорожного движения <span className="accent">Смоленской области</span></h1>
-                    <p>Безопасность и порядок на дорогах <br /> вашего региона</p>
-                    <Heart width="300px" height="250px" className="heart" />
+                    <CrossLine style={{padding: "10px 0px"}}/>
+                    <p style={{paddingBottom: "40px"}}>Безопасность и порядок на дорогах <br /> вашего региона</p>
+                    {/* <Heart width="300px" height="250px" className="heart" /> */}
 
                     <div className="actionButtons" style={{gap: "20px"}}>
-                        <Button isOnBright={true} text="О центре организации" />
+                        <Button isOnBright={true} text="Об организации" />
                         <Button isAccent={true} text="Услуги" />
                     </div>
                 </div>

@@ -1,43 +1,107 @@
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '../static/images/logo.svg';
-import '../static/styles/Header.css';
+import { ReactComponent as Menu } from '../static/images/menu.svg';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './Button';
+import { useEffect, useState } from 'react';
 import Dropdown from './DropdownMenu';
+import axios from 'axios';
+import '../static/styles/Header.css';
+
 
 export const Header = () => {
     const navigate = useNavigate();
 
+    const [isNavOpened, setIsNavOpened] = useState(false);
+
+    // projects format:
+    // [
+    //     {
+    //         "name": string,
+    //         "path": string,
+    //     }
+    // ]
+
+    const [projects, setProjects] = useState([
+        {
+            "name": "Новые дороги",
+            "path": "new-roads",
+        },
+        {
+            "name": "Светофоры 2.0",
+            "path": "trafficlights-2.0",
+        },
+        {
+            "name": "Знаки и дети",
+            "path": "signs-and-kids",
+        }
+    ]);
+
+    const [services, setServices] = useState([
+        {
+            "name": "Вызов эвакуатора",
+            "path": "evacuate"
+        },
+        {
+            "name": "Аренда автовышки",
+            "path": "rent-auto"
+        },
+        {
+            "name": "Документация",
+            "path": "documents"
+        }
+    ])
+
+    const load = async () => {
+        return;
+
+        try {
+            const result = await axios.get("/projects");
+            setProjects(result.data);
+        } catch (e) {
+            console.log(`Error while fetching projects: ${e}`);
+            setProjects([]);
+        }
+    }
+
+    useEffect(() => {
+        load();
+    }, []);
+
     return (
         <header>
+            <div onClick={() => setIsNavOpened(false)} className='out-click-listener' style={{ transform: isNavOpened ? "none" : "translateX(100%)", opacity: isNavOpened * 1 }}></div>
+
             <div className='logo'>
                 <Logo />
                 <p className='header-title'>СЦОДД</p>
             </div>
 
-            <div className='nav'>
+            <div className={`nav ${isNavOpened ? "nav-opened" : ""}`}>
                 <Dropdown value="Проекты" options={[
-                    <Button text="Жалоба на дороги" isOnBright={false} />,
-                    <Button text="Светофоры 2.0" isOnBright={false} />
+                    ...projects.map((val, i, arr) => <Button text={val.name} onClick={() => navigate(`/project/${val.path}`)} />),
+                    <Button text="Карта аварий" onClick={() => navigate("/services/accidents-map")} />,
+                    <Button text="Статистика" onClick={() => navigate("/services/stats")} />,
                 ]} />
 
-                <Dropdown value="Услуги" options={[
-                    <Button text="Вызов эвакуатора" onClick={() => navigate("/services/evacuate")}/>,
-                    <Button text="Аренда автовышки" onClick={() => navigate("/services/rent-auto")}/>,
-                    <Button text="Документация"  onClick={() => navigate("/services/documents")}/>,
-                ]} />
+                <Dropdown value="Услуги" options={
+                    services.map((val, i, arr) =>
+                        <Button text={val.name} onClick={() => navigate(`/services/${val.path}`)} />
+                    )
+                } />
 
                 <Dropdown value="Другое" options={[
-                    <Button text="Контакты" />,
-                    <Button text="Вакансии" />,
-                    <Button text="Документы" />,
-                    <Button text="Команда" />,
+                    <Button text="Контакты" onClick={() => navigate("/contacts")}/>,
+                    <Button text="Вакансии" onClick={() => navigate("/vacancies")}/>,
+                    <Button text="Документы" onClick={() => navigate("/documents")}/>
                 ]} />
 
-                <Button text="Новости" onClick={() => navigate("/news")}/>
-                <Button text="Статьи" onClick={() => navigate("/articles")} />
+                <Button text="Новости" isOnBright={true} onClick={() => navigate("/news")} />
+                <Button text="Статьи" isOnBright={true} onClick={() => navigate("/articles")} />
 
-                <Button text="О ЦОДД" isAccent="true" />
+                <Button text="О ЦОДД" isOnBright={true} onClick={() => navigate("/about")} />
             </div>
+
+            <Menu style={{ width: "40px", height: "40px" }} className='menu-button' onClick={(e) => { setIsNavOpened(!isNavOpened) }} />
         </header>
     );
 }

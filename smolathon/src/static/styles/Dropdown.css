@@ -38,9 +38,11 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-    background-color: #cccccc;
+    background-color: #eeeeee;
     padding: 5px;
     border-radius: 7px;
+
+    box-shadow: 0 0 4px lightgray;
 }
 
 .dropdown-indicator {
