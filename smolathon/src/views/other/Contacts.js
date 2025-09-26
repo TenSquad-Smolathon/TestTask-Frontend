@@ -18,7 +18,7 @@ export const Contacts = () => {
 
     const load = async () => {
         try {
-            const result = await axios.get("/contacts");
+            const result = await axios.get("/content/contacts");
             setContacts(result.data);
         } catch (e) {
             console.log(`Error while fetching contacts: ${e}`)
@@ -39,7 +39,7 @@ export const Contacts = () => {
             {isLoaded ? <div className="content">
                 {contacts != null ? <div className="myContent">
                     <h1>Контакты</h1>
-                    <p>Позвоните или напишите нам на почту, если у вас есть какие-либо вопросы по этим телефонам:</p>
+                    <p>Позвоните или напишите нам на почту, если у вас есть какие-либо вопросы:</p>
 
                     <div className="contacts">
                         {

@@ -43,3 +43,7 @@ input {
   margin: 10px;
   margin-left: 20px;
 }
+
+input:focus {
+  border: 1.5px solid black;
+}

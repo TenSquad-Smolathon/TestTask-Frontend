@@ -4,7 +4,6 @@ import { Button } from "../widgets/Button";
 import { LoadingPlaceholder } from "../widgets/LoadingPlaceholder";
 import { FailedPlaceholder } from "../widgets/FailedPlaceholder";
 import Markdown from 'react-markdown'
-import TestImage from "../static/images/road.webp";
 import axios from "axios";
 import '../static/styles/News.css';
 

@@ -1,15 +1,18 @@
-import { Header } from "../widgets/Header";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from "recharts";
-import { useEffect, useRef, useState } from "react";
+import { Checkbox, FormControl, FormControlLabel } from "@mui/material";
 import { LoadingPlaceholder } from "../widgets/LoadingPlaceholder";
 import { FailedPlaceholder } from "../widgets/FailedPlaceholder";
-import { Checkbox, FormControl, FormControlLabel } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { Header } from "../widgets/Header";
+import { Button } from "../widgets/Button";
+
 import MultiRangeSlider from "multi-range-slider-react";
 import axios from "axios";
-import "../static/styles/Stats.css";
-import { Button } from "../widgets/Button";
 import ExcelJS from 'exceljs';
 
+import "../static/styles/Stats.css";
+
+// generates random RGB color
 function randomRGB() {
     const x = Math.floor(Math.random() * 255);
     const y = Math.floor(Math.random() * 255);
@@ -161,7 +164,7 @@ export const Graph = ({ children: val, gridEnabled = true, axesEnabled = true, l
     }
 }
 
-export const GraphWrapper = ({ children, admin = false, isInMatching = false, addInMatching = (v) => {} }) => {
+export const GraphWrapper = ({ children, admin = false, isInMatching = false, addInMatching = (v) => { } }) => {
     const [enableGrid, setEnableGrid] = useState('on');
     const [enableAxes, setEnableAxes] = useState('on');
     const [enableLegend, setEnableLegend] = useState('on');
@@ -176,6 +179,7 @@ export const GraphWrapper = ({ children, admin = false, isInMatching = false, ad
 
     const gRef = useRef(null);
 
+    // Filters values by passed year range
     const filterValues = () => {
         let res = [];
         let fields = [];
@@ -209,11 +213,14 @@ export const GraphWrapper = ({ children, admin = false, isInMatching = false, ad
         return [res, fields];
     }
 
-    const downloadCSV = () => {
+    // Converts current data to CSV values String
+    const toCSV = () => {
         let data = 'month';
+        let sum_y = {}
 
         for (var field of children.fields) {
-            data += `,${field}`;
+            sum_y[field] = 0;
+            data += `,${field},${field} (нарастающим итогом)`;
         }
 
         data += '\n';
@@ -222,12 +229,23 @@ export const GraphWrapper = ({ children, admin = false, isInMatching = false, ad
             data += `${value.x}`
 
             for (var field of children.fields) {
-                data += `,${value[`y_${field}`]}`
+                data += `,${value[`y_${field}`]},${sum_y[field]}`;
+                sum_y[field] += value[`y_${field}`];
             }
 
             data += '\n';
         }
+        data += `Итого`
 
+        for (const field of children.fields) {
+            data += `,,${sum_y[field]}`;
+        }
+
+        return data;
+    }
+
+    const downloadCSV = () => {
+        const data = toCSV();
         const blob = new Blob([data], { type: "text/csv" });
         const download_object = document.createElement('a');
 
@@ -237,24 +255,7 @@ export const GraphWrapper = ({ children, admin = false, isInMatching = false, ad
     }
 
     const downloadXLXS = async () => {
-        let data = 'month';
-
-        for (var field of children.fields) {
-            data += `,${field}`;
-        }
-
-        data += '\n';
-
-        for (var value of children.values) {
-            data += `${value.x}`
-
-            for (var field of children.fields) {
-                data += `,${value[`y_${field}`]}`
-            }
-
-            data += '\n';
-        }
-
+        const data = toCSV();
         const wb = new ExcelJS.Workbook();
         const ws = wb.addWorksheet("Data");
 
@@ -398,7 +399,7 @@ export const GraphWrapper = ({ children, admin = false, isInMatching = false, ad
                         <p>Мин. знач. : {calculateMinVals()}</p>
                     </div>
 
-                    <Button text={isInMatching ? "Удалить из сравнения" : "Добавить в сравнение"} onClick={() => addInMatching(children.name)}/>
+                    <Button text={isInMatching ? "Удалить из сравнения" : "Добавить в сравнение"} onClick={() => addInMatching(children.name)} />
                 </div>
             }
 

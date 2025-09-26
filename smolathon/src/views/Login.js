@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { useAuth } from "../providers/authProvider";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import '../static/styles/Login.css';
 
 export const Login = () => {
-    const [authorized, setAuthorized] = useState(false);
-    const [input, setInput] = useState({ email: '', password: '' });
+    const [input, setInput] = useState({ username: '', password: '' });
     const { loginAction } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         loginAction(input).then((val) => {
-            setAuthorized(val);
             console.log(val);
+
+            if (val) {
+                navigate("/admin");
+            } else {
+                alert("Неверный логин или пароль, или сервер недоступен");
+            }
         });
     };
 
@@ -22,12 +27,12 @@ export const Login = () => {
         <div className="login-wrapper">
             <div className="login-root">
                 <h1>Вход</h1>
-                {authorized ? <Navigate to="/admin"></Navigate> : <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
                     <div className="inputs">
                         <br />
-                        <label htmlFor="email">Почта</label>
+                        <label htmlFor="username">Логин</label>
                         <br />
-                        <input type='email' autoComplete='username' name='email' onChange={(e) => setInput({ ...input, email: e.target.value })} />
+                        <input type='login' autoComplete='username' name='username' onChange={(e) => setInput({ ...input, username: e.target.value })} />
 
                         <br />
                         <label htmlFor="password">Пароль</label>
@@ -37,7 +42,7 @@ export const Login = () => {
                     
                     <br />
                     <input type="submit" value="Войти" />
-                </form>}
+                </form>
             </div>
         </div>
 

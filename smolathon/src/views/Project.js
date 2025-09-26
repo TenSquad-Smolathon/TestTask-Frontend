@@ -13,9 +13,9 @@ export const Project = () => {
 
     const load = async () => {
         try {
-            const result = await axios.post("/project", {
-                name: name,
-            });
+            const result = await axios.get(`/projects/${name}`);
+            console.log(result);
+            // TODO: fix that so only one project is selected
 
             setProjectData(result.data);
         } catch (e) {
@@ -39,7 +39,7 @@ export const Project = () => {
                 {projectData != null ? <div className="myContent">
                     <h1>Проект {projectData.name}</h1>
                     <Markdown>
-                        {projectData.text}
+                        {projectData.description}
                     </Markdown>
                 </div> : <FailedPlaceholder retry={() => console.log("retrying") || load() || setIsLoaded(false)}>проект</FailedPlaceholder>}
             </div> : <LoadingPlaceholder>проект</LoadingPlaceholder>}

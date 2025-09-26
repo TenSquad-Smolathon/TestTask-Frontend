@@ -21,45 +21,24 @@ export const Header = () => {
     //     }
     // ]
 
-    const [projects, setProjects] = useState([
-        {
-            "name": "Новые дороги",
-            "path": "new-roads",
-        },
-        {
-            "name": "Светофоры 2.0",
-            "path": "trafficlights-2.0",
-        },
-        {
-            "name": "Знаки и дети",
-            "path": "signs-and-kids",
-        }
-    ]);
-
-    const [services, setServices] = useState([
-        {
-            "name": "Вызов эвакуатора",
-            "path": "evacuate"
-        },
-        {
-            "name": "Аренда автовышки",
-            "path": "rent-auto"
-        },
-        {
-            "name": "Документация",
-            "path": "documents"
-        }
-    ])
+    const [projects, setProjects] = useState([]);
+    const [services, setServices] = useState([])
 
     const load = async () => {
-        return;
-
         try {
             const result = await axios.get("/projects");
             setProjects(result.data);
         } catch (e) {
             console.log(`Error while fetching projects: ${e}`);
             setProjects([]);
+        }
+
+        try {
+            const result = await axios.get("/services");
+            setServices(result.data);
+        } catch (e) {
+            console.log(`Error while fetching projects: ${e}`);
+            setServices([]);
         }
     }
 
@@ -78,14 +57,14 @@ export const Header = () => {
 
             <div className={`nav ${isNavOpened ? "nav-opened" : ""}`}>
                 <Dropdown value="Проекты" options={[
-                    ...projects.map((val, i, arr) => <Button text={val.name} onClick={() => navigate(`/project/${val.path}`)} />),
+                    ...projects.map((val, i, arr) => <Button text={val.name} onClick={() => navigate(`/project/${val.id}`)} />),
                     <Button text="Карта аварий" onClick={() => navigate("/services/accidents-map")} />,
                     <Button text="Статистика" onClick={() => navigate("/services/stats")} />,
                 ]} />
 
                 <Dropdown value="Услуги" options={
                     services.map((val, i, arr) =>
-                        <Button text={val.name} onClick={() => navigate(`/services/${val.path}`)} />
+                        <Button text={val.name} onClick={() => navigate(`/services/${val.id}`)} />
                     )
                 } />
 

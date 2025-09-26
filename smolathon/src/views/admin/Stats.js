@@ -28,7 +28,7 @@ export const AdminStats = () => {
     const [charts, setCharts] = useState([
         {
             "name": "Суммы штрафов",
-            "type": "bar", // !!!
+            "type": "line", // !!!
             "fields": ["2024", "2025"],
             "values": [
                 {
@@ -121,7 +121,7 @@ export const AdminStats = () => {
                         <input placeholder="Поиск..." type="search" onChange={(e) => setSearchTerm(e.target.value)}></input>
 
                         <div className="graphs-grid">
-                            {searchedCharts.map((val, ind, arr) => <GraphWrapper admin isInMatching={tableValues.includes(val.name)} addInMatching={addOrRemove}>{val}</GraphWrapper>)}
+                            {searchedCharts.length === 0 ? <p>По вашему запросу ничего не найдено</p> : searchedCharts.map((val, ind, arr) => <GraphWrapper admin isInMatching={tableValues.includes(val.name)} addInMatching={addOrRemove}>{val}</GraphWrapper>)}
                         </div>
 
                         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>

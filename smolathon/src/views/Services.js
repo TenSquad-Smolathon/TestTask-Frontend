@@ -12,7 +12,7 @@ export const Services = () => {
 
     const load_service = async () => {
         try {
-            const response = await axios.post("/services", {
+            const response = await axios.post("/content/services", {
                 name: name
             });
             setService(response.data);

@@ -1,17 +1,17 @@
 import { AuthProvider } from './providers/authProvider';
 import { PrivateRoute } from './widgets/PrivateRoute';
-import { Login } from './views/Login';
 import { NotFound } from './views/NotFound';
-import { Landing } from './views/Landing';
 import { Routes, Route } from 'react-router-dom';
 
-
+import { Login } from './views/Login';
 import { Admin } from './views/admin/Admin';
 import { AdminRedactor } from './views/admin/Redactor';
 import { AdminOrders } from './views/admin/Orders';
 import { AdminStats } from './views/admin/Stats';
 import { AdminMaps } from './views/admin/Maps';
+import { AdminImport } from './views/admin/Import';
 
+import { Landing } from './views/Landing';
 import { Articles } from './views/Articles';
 import { News } from './views/News';
 import { Stats } from './views/Stats';
@@ -24,6 +24,7 @@ import { Vacancies } from './views/other/Vacancies';
 import { Documents } from './views/other/Documents';
 
 import './static/styles/App.css';
+import { AdminInsert } from './views/admin/Insert';
 
 
 const services = [
@@ -39,6 +40,8 @@ const admins = [
   <Route path="/admin/stats" element={<PrivateRoute><AdminStats /></PrivateRoute>} />,
   <Route path="/admin/orders" element={<PrivateRoute><AdminOrders /></PrivateRoute>} />,
   <Route path="/admin/maps" element={<PrivateRoute><AdminMaps /></PrivateRoute>} />,
+  <Route path="/admin/import" element={<PrivateRoute><AdminImport /></PrivateRoute>} />,
+  <Route path="/admin/insert" element={<PrivateRoute><AdminInsert /></PrivateRoute>} />,
 
   <Route path="/admin/*" element={<Login />} />
 ];

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Feature, Map, Overlay, View } from 'ol';
 import { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
@@ -19,7 +19,7 @@ import { Button } from './Button';
 //     }
 // ];
 
-function OpenLayersMap({ features, reload = () => {} }) {
+function OpenLayersMap({ features, reload = () => { } }) {
     const tooltipElement = useRef(null);
     const mapRef = useRef(null);
 
@@ -54,12 +54,15 @@ function OpenLayersMap({ features, reload = () => {} }) {
             }),
         });
 
-        for (var feature of features) {
-            const f = new Feature({
-                geometry: new Point(fromLonLat([feature.longitude, feature.latitude])),
-                title: "Авария",
-            });
-            featureOverlay.getSource().addFeature(f);
+        for (const key of Object.keys(features)) {
+            console.log(key, features);
+            for (var feature of features[key]) {
+                const f = new Feature({
+                    geometry: new Point(fromLonLat([feature.longitude, feature.latitude])),
+                    title: key,
+                });
+                featureOverlay.getSource().addFeature(f);
+            }
         }
 
         let tooltipOverlay = new Overlay({
@@ -112,7 +115,7 @@ function OpenLayersMap({ features, reload = () => {} }) {
 
             <div className='map-tools'>
                 <h3>Настройки отображения</h3>
-                
+
                 <br />
 
                 <Button text="Обновить" onClick={reload} isOnBright={true} />

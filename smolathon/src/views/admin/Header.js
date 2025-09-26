@@ -15,6 +15,8 @@ export const AdminHeader = () => {
                 <a href="/admin/maps">Карты</a>
                 <a href="/admin/orders">Заказы</a>
                 <a href="/admin/redactor">Редактор страниц</a>
+                <a href="/admin/import">Импорт данных</a>
+                <a href="/admin/insert">Внос данных</a>
             </div>
 
             <Menu style={{ width: "40px", height: "40px" }} className='menu-button' onClick={(e) => { setIsNavOpened(!isNavOpened) }} />

@@ -21,7 +21,7 @@ export const Vacancies = () => {
 
     const load = async () => {
         try {
-            const result = await axios.get("/vacancies");
+            const result = await axios.get("/content/vacancies");
             setVacancies(result.data);
         } catch (e) {
             console.log(`Error while fetching contacts: ${e}`)
