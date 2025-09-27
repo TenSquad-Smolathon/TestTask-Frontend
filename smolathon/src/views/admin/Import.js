@@ -1,7 +1,7 @@
 import { AdminHeader } from './Header';
 import { useEffect, useState } from 'react';
 import ExcelJS from 'exceljs';
-import { MenuItem, Select, Slider, Typography } from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, MenuItem, Select, Slider, Typography } from '@mui/material';
 import { APIInterface } from '../../api/api';
 
 // Страница импорта данных из CSV и XLS/XLSX файлов
@@ -174,11 +174,20 @@ export const AdminImport = () => {
                                             tableData[startIndex - 1].map((v) => <p style={{ margin: 0 }}>{v}</p>)
                                         }
                                         {
-                                            tableData[startIndex - 1].map((_) => <Select label="Столбец" onChange={(e) => { }} defaultValue={-1}>
-                                                {
-                                                    [null, ...selectedTable.fields].map((v2, i, arr) => <MenuItem value={i - 1}>{v2 != null ? v2 : ""}</MenuItem>)
-                                                }
-                                            </Select>)
+                                            tableData[startIndex - 1].map((_) => <div style={{ display: "flex", flexDirection: "column", border: "1px solid black" }}>
+                                                <Select label="Столбец" onChange={(e) => { }} defaultValue={-1}>
+                                                    {
+                                                        [null, ...selectedTable.fields].map((v2, i, arr) => <MenuItem value={i - 1}>{v2 != null ? v2.toString() : ""}</MenuItem>)
+                                                    }
+                                                </Select>
+
+                                                <FormControl className="form">
+
+                                                    <FormControlLabel label={""} control={<Checkbox defaultChecked color="custom" style={{ color: "#62A744" }} />} onChange={() => {
+
+                                                    }} />
+                                                </FormControl>
+                                            </div>)
                                         }
                                     </div>
                                 </div>
