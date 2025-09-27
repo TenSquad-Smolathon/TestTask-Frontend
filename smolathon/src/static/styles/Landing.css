@@ -84,3 +84,12 @@
     row-gap: min(50px, 5%);
     column-gap: min(50px, 5%);
 }
+
+@media screen and (max-width: 500px) {
+    .m2 .buttons {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
