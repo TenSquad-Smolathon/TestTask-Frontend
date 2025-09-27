@@ -7,7 +7,8 @@ import axios from 'axios';
 import { BrowserRouter } from 'react-router-dom';
 
 // axios config
-axios.defaults.baseURL = "http://localhost:8000/api/";
+// axios.defaults.baseURL = "http://localhost:8000/api/";
+axios.defaults.baseURL = "http://83.166.246.94:8000/api/";
 
 // set auth token to every request
 axios.interceptors.request.use((config) => {
