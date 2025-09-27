@@ -1,5 +1,6 @@
 import { Button } from "./Button";
 
+// Placeholder for failed loading
 export const FailedPlaceholder = ({ children, retry = () => {} }) => {
     return (
         <div className="loading">

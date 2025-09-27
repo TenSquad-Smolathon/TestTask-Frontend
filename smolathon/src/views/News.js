@@ -7,14 +7,14 @@ import Markdown from 'react-markdown'
 import axios from "axios";
 import '../static/styles/News.css';
 
-
+// Страница новостей
 export const News = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [news, setNews] = useState(null);
 
     const load = async () => {
         try {
-            const result = await axios.get("/news");
+            const result = await axios.get("/content/news/");
             setNews(result.data);
         } catch (e) {
             console.log(`Exception while fetching news: ${e}`);
@@ -31,9 +31,9 @@ export const News = () => {
     return (
         <div className="news-container">
             <Header />
-            <div style={{ height: "20px" }} />
+            <div style={{ height: "70px" }} />
 
-            {isLoaded ? <div className="new">
+            {isLoaded ? <div>
                 {news != null ? <div className="myContent">
                     <h1>Новости ЦОДД</h1>
                     <div className="news">
@@ -51,11 +51,11 @@ const New = ({ children: val }) => {
     return (
         <div>
             <div className="new">
-                <img src={val.image_src}></img>
+                <img src={val.image_src} style={{ minHeight: "200px", minWidth: "200px", background: "lightgray" }}></img>
 
                 <div className="text-part">
                     <div>
-                        <h1 className="heading">{val.title}</h1>
+                        <h1 className="heading">{val.name}</h1>
                         <p className="heading">{val.short_desc}</p>
                     </div>
 
@@ -77,7 +77,7 @@ export const NewReader = ({ children: val, close = () => { } }) => {
         <div className="reader-wrapper">
             <div className="reader">
                 <Button onClick={close} isAccent={true} text="Закрыть" className="close-button" />
-                <h1 style={{ fontSize: "2rem" }}>{val.title}</h1>
+                <h1 style={{ fontSize: "2rem" }}>{val.name}</h1>
                 <hr />
                 <Markdown>{val.text}</Markdown>
             </div>

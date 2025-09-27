@@ -1,6 +1,6 @@
 header {
     width: calc(100% - 80px);
-    height: auto;
+    height: 40px;
 
     padding: 10px 40px;
 
@@ -43,6 +43,7 @@ header .nav {
 }
 
 header .menu-button {
+    padding: 0;
     display: none;
 }
 

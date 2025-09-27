@@ -9,6 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 // axios config
 axios.defaults.baseURL = "http://localhost:8000/api/";
 
+// set auth token to every request
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('access-token');
 
@@ -19,6 +20,7 @@ axios.interceptors.request.use((config) => {
   return config;
 }, (error) => Promise.reject(error));
 
+// request new token if request failed with 401
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -62,4 +64,5 @@ root.render(
   </React.StrictMode>
 );
 
-reportWebVitals(console.log);
+// reportWebVitals(console.log); // for debugging
+reportWebVitals()

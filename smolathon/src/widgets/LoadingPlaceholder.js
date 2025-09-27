@@ -1,5 +1,6 @@
 import { CircularProgress } from "@mui/material";
 
+// Placeholder for loading screen
 export const LoadingPlaceholder = ({children}) => {
     return (
         <div className="loading">

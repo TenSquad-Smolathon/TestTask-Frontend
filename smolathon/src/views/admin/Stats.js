@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../../static/styles/AdminStats.css';
 
+// Страница статистики для администратора (общие данные + экономические данные)
 export const AdminStats = () => {
     // CHARTS FMT:
     /*
@@ -25,54 +26,29 @@ export const AdminStats = () => {
     ]
     */
 
-    const [charts, setCharts] = useState([
-        {
-            "name": "Суммы штрафов",
-            "type": "line", // !!!
-            "fields": ["2024", "2025"],
-            "values": [
-                {
-                    "x": "Март",
-                    "y_2024": 30000,
-                    "y_2025": 46000,
-                },
-                {
-                    "x": "Апрель",
-                    "y_2024": 30000,
-                    "y_2025": 47000,
-                },
-                {
-                    "x": "Май",
-                    "y_2024": 30000,
-                    "y_2025": 48000,
-                },
-                {
-                    "x": "Июнь",
-                    "y_2024": 30000,
-                    "y_2025": 49000,
-                }
-            ],
-        }
-    ]);
+    const [charts, setCharts] = useState(null);
     const [searchedCharts, setSearchedCharts] = useState(charts);
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoaded, setIsLoaded] = useState(false);
     const [tableValues, setTableValues] = useState([]);
 
     const load = async () => {
-
         try {
-            const result = await axios.get("/admin-charts");
-            setCharts(result);
+            const result = await axios.get("/analytics/stats");
+            setCharts(result.data);
+            setSearchedCharts(result.data);
         } catch (e) {
-            // setCharts(null);
+            setCharts(null);
             console.log(`Error while fetching charts: ${e}`);
         }
 
         setIsLoaded(true);
     }
 
+    // reload searh values
     const applySearch = () => {
+        if (charts == null) return;
+
         let result = [];
 
         for (const chart of charts) {
@@ -84,6 +60,8 @@ export const AdminStats = () => {
         setSearchedCharts(result);
     }
 
+    // TODO: make a summary table logic
+    // this function adds or removes table from summary
     const addOrRemove = (x) => {
         if (tableValues.includes(x)) {
             let vals = [...tableValues];
@@ -103,6 +81,7 @@ export const AdminStats = () => {
         load();
     }, []);
 
+    // reload when searchTerm changed
     useEffect(() => {
         applySearch();
     }, [searchTerm]);
@@ -125,7 +104,7 @@ export const AdminStats = () => {
                         </div>
 
                         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-                            {/* TODO: create a table logic */}
+                            {/* TODO: create summary table logic */}
                             {/* <table style={{ alignSelf: "center" }}>
                                 <tbody>
                                     <tr>

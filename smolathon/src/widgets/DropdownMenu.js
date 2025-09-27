@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import '../static/styles/Dropdown.css'; // We'll create this next
 
+// Dropdown-selector
 const Dropdown = ({
     options = [],
     value = "Dropdown",

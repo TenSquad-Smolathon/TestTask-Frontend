@@ -1,15 +1,17 @@
 import { AdminHeader } from './Header';
 import { useEffect, useState } from 'react';
 import ExcelJS from 'exceljs';
-import { FormControl, MenuItem, Select, Slider, Typography } from '@mui/material';
+import { MenuItem, Select, Slider, Typography } from '@mui/material';
 import { APIInterface } from '../../api/api';
 
+// Страница импорта данных из CSV и XLS/XLSX файлов
 export const AdminImport = () => {
     const [file, setFile] = useState(null);
     const [worksheets, setWorksheets] = useState([]);
     const [excelBook, setExcelBook] = useState(null);
     const [tableData, setTableData] = useState([]);
 
+    // available tables (in future: fetch from DB)
     const [tables, setTables] = useState([
         { "name": "trafficlights", "fields": ["lat", "long", "type"] },
         { "name": "evacuations", "fields": ["lat", "long"] },
@@ -21,17 +23,19 @@ export const AdminImport = () => {
     // TODO: match columns from table to DB tables
     // and then push data to DB
 
-    useEffect(() => {
-        (async () => {
-            try {
-                setTables(await APIInterface.fetch_tables());
-            } catch (e) {
-                console.log("An error occured while fetching tables:", e);
-                setTables([]);
-            }
-        })();
-    }, []);
+    // TODO:
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             setTables(await APIInterface.fetch_tables());
+    //         } catch (e) {
+    //             console.log("An error occured while fetching tables:", e);
+    //             setTables([]);
+    //         }
+    //     })();
+    // }, []);
 
+    // handle user-selected files
     const handleFiles = (e) => {
         const files = e.target.files;
 
@@ -46,6 +50,7 @@ export const AdminImport = () => {
         setTableData([]);
     }
 
+    // load file and parse it
     const loadFile = async () => {
         const name = file.name.split(".");
         const ext = name[name.length - 1];
@@ -71,6 +76,7 @@ export const AdminImport = () => {
         }
     }
 
+    // handle selection of Excel file worksheet
     const handleWorksheetSelection = (e) => {
         try {
             const ws_name = e.target.textContent;
@@ -89,6 +95,7 @@ export const AdminImport = () => {
         }
     }
 
+    // handle selection of table to push data to
     const handleTableSelect = (e) => {
         const val = e.target.value;
         setSelectedTable(tables[val]);
@@ -108,6 +115,7 @@ export const AdminImport = () => {
                 <input type='button' value="Загрузить" onClick={loadFile}></input>
 
                 {
+                    // list (worksheet) selection
                     file != null && excelBook != null && worksheets.length > 0 && <div>
                         <h3>В выбранном файле есть следующие листы (нажмите, чтобы выбрать):</h3>
                         <ul>
@@ -116,65 +124,69 @@ export const AdminImport = () => {
                     </div>
                 }
 
-                {tableData.length > 0 && <div style={{ padding: "0px 20px" }}>
-                    <h3 style={{ margin: 0 }}>Данные таблицы:</h3>
-                    <br />
-
-                    <table>
-                        <tbody>
-                            {
-                                tableData.slice(0, tableData.length - 1 * (tableData[tableData.length - 1].length != tableData[0].length)).map((v, i, arr) =>
-                                    i < 30 ? <tr>
-                                        {
-                                            [i + 1, ...v].map((v2) =>
-                                                <td>{(v2 ?? "").toString()}</td>
-                                            )
-                                        }
-                                    </tr> : i == 30 ? <tr>
-                                        <td>Данные обрезаны до строки 30 для удобства</td>
-                                    </tr> : <></>
-                                )
-                            }
-                        </tbody>
-                    </table>
-
-                    <div className='import-block'>
-                        <br />
-                        <h3 style={{ margin: 0 }}>Настройки импорта</h3>
-
-                        <Typography>Начать с ряда №:</Typography>
-                        <Slider color='custom' style={{ color: "#62A744" }} name='start-from' defaultValue={1} min={1} step={1} shiftStep={1} marks max={tableData.length - 1} valueLabelDisplay='auto' onChange={(_, v, __) => setStartIndex(v)}></Slider>
-
-                        <Typography>Внести данные в таблицу:</Typography>
-                        <Select label={"Таблица"} onChange={handleTableSelect} defaultValue={-1}>
-                            {
-                                [null, ...tables].map((v, i, arr) => <MenuItem value={i - 1}>{v != null ? v.name : ""}</MenuItem>)
-                            }
-                        </Select>
-
+                {
+                    // table data
+                    tableData.length > 0 && <div style={{ padding: "0px 20px" }}>
+                        <h3 style={{ margin: 0 }}>Данные таблицы:</h3>
                         <br />
 
-                        {
-                            !!selectedTable && <div>
-                                <Typography>Сопоставьте столбцы:</Typography>
-                                <div className='selection-grid' style={{ display: "grid", gridTemplateColumns: `repeat(${tableData[0].length}, 1fr)` }}>
-                                    {
-                                        tableData[startIndex - 1].map((v) => <p style={{margin: 0}}>{v}</p>)
-                                    }
-                                    {
-                                        tableData[startIndex - 1].map((_) => <Select label="Столбец" onChange={(e) => {}} defaultValue={-1}>
+                        <table>
+                            <tbody>
+                                {
+                                    tableData.slice(0, tableData.length - 1 * (tableData[tableData.length - 1].length != tableData[0].length)).map((v, i, arr) =>
+                                        i < 30 ? <tr>
                                             {
-                                                [null, ...selectedTable.fields].map((v2, i, arr) => <MenuItem value={i - 1}>{v2 != null ? v2 : ""}</MenuItem>)
+                                                [i + 1, ...v].map((v2) =>
+                                                    <td>{(v2 ?? "").toString()}</td>
+                                                )
                                             }
-                                        </Select>)
-                                    }
+                                        </tr> : i == 30 ? <tr>
+                                            <td>Данные обрезаны до строки 30 для удобства</td>
+                                        </tr> : <></>
+                                    )
+                                }
+                            </tbody>
+                        </table>
+
+                        <div className='import-block'>
+                            <br />
+                            {/* import settings */}
+                            <h3 style={{ margin: 0 }}>Настройки импорта</h3>
+
+                            <Typography>Начать с ряда №:</Typography>
+                            <Slider color='custom' style={{ color: "#62A744" }} name='start-from' defaultValue={1} min={1} step={1} shiftStep={1} marks max={tableData.length - 1} valueLabelDisplay='auto' onChange={(_, v, __) => setStartIndex(v)}></Slider>
+
+                            <Typography>Внести данные в таблицу:</Typography>
+                            <Select label={"Таблица"} onChange={handleTableSelect} defaultValue={-1}>
+                                {
+                                    [null, ...tables].map((v, i, arr) => <MenuItem value={i - 1}>{v != null ? v.name : ""}</MenuItem>)
+                                }
+                            </Select>
+
+                            <br />
+
+                            {
+                                // column-matching
+                                !!selectedTable && <div>
+                                    <Typography>Сопоставьте столбцы:</Typography>
+                                    <div className='selection-grid' style={{ display: "grid", gridTemplateColumns: `repeat(${tableData[0].length}, 1fr)` }}>
+                                        {
+                                            tableData[startIndex - 1].map((v) => <p style={{ margin: 0 }}>{v}</p>)
+                                        }
+                                        {
+                                            tableData[startIndex - 1].map((_) => <Select label="Столбец" onChange={(e) => { }} defaultValue={-1}>
+                                                {
+                                                    [null, ...selectedTable.fields].map((v2, i, arr) => <MenuItem value={i - 1}>{v2 != null ? v2 : ""}</MenuItem>)
+                                                }
+                                            </Select>)
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     </div>
-                </div>
                 }
-            </div >
+            </div>
         </div>
 
     );

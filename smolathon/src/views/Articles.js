@@ -2,13 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Header } from "../widgets/Header";
 import { Button } from "../widgets/Button";
-import TestImage from "../static/images/road.webp";
 import { LoadingPlaceholder } from "../widgets/LoadingPlaceholder";
 import { FailedPlaceholder } from "../widgets/FailedPlaceholder";
 import { NewReader } from "./News";
 import '../static/styles/Article.css';
 import '../static/styles/News.css';
 
+// Страница статей
 export const Articles = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [articles, setArticles] = useState(null);
@@ -17,7 +17,7 @@ export const Articles = () => {
         console.log("Loading!");
 
         try {
-            const result = await axios.get("/articles");
+            const result = await axios.get("/content/articles/");
             setArticles(result.data);
         } catch (e) {
             console.log(`Exception while fetching articles: ${e}`);
@@ -34,7 +34,7 @@ export const Articles = () => {
     return (
         <div className="articles-container">
             <Header />
-            <div style={{ height: "20px" }} />
+            <div style={{ height: "70px" }} />
 
             {isLoaded ? <div className="content">
                 {articles != null ? <div className="myContent">
@@ -54,11 +54,11 @@ const Article = ({ val }) => {
     return (
         <div>
             <div className="article">
-                <img src={val.image_src}></img>
+                <img src={val.image_src} style={{ minHeight: "200px", minWidth: "200px", background: "lightgray" }} ></img>
 
                 <div style={{ height: "10px" }} />
 
-                <h1 className="heading">{val.title}</h1>
+                <h1 className="heading">{val.name}</h1>
                 <p className="heading">{val.short_desc}</p>
 
                 <div style={{ height: "10px" }} />

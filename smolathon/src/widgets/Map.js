@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Feature, Map, Overlay, View } from 'ol';
 import { Point } from 'ol/geom';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat } from 'ol/proj';
+import { Button } from './Button';
+import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
@@ -10,16 +12,11 @@ import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import SVGPoint from '../static/images/point.svg';
 import '../static/styles/Map.css';
-import { Button } from './Button';
 
-// let features = [
-//     {
-//         "longitude": 32.04371,
-//         "latitude": 54.77944
-//     }
-// ];
-
+// Map based on OpenLayers framework
 function OpenLayersMap({ features, reload = () => { } }) {
+    const [coordinates, setCoordinates] = useState([32.04371, 54.77944]);
+    const [filter, setFilter] = useState({});
     const tooltipElement = useRef(null);
     const mapRef = useRef(null);
 
@@ -35,7 +32,7 @@ function OpenLayersMap({ features, reload = () => { } }) {
             ],
 
             view: new View({
-                center: fromLonLat([32.04371, 54.77944]),
+                center: fromLonLat(coordinates),
                 zoom: 14,
                 maxZoom: 14,
                 minZoom: 14,
@@ -54,8 +51,10 @@ function OpenLayersMap({ features, reload = () => { } }) {
             }),
         });
 
+        featureOverlay.getSource().clear()
         for (const key of Object.keys(features)) {
-            console.log(key, features);
+            if (filter[key] != null && !filter[key]) continue;
+
             for (var feature of features[key]) {
                 const f = new Feature({
                     geometry: new Point(fromLonLat([feature.longitude, feature.latitude])),
@@ -101,22 +100,37 @@ function OpenLayersMap({ features, reload = () => { } }) {
 
         map.on('pointermove', handler);
         map.on('click', handler);
+        map.on('pointerdrag', (e) => {
+            setCoordinates(toLonLat(map.getView().getCenter()));
+        });
 
         return () => {
             map.dispose();
         };
     }
 
-    useEffect(initialize, [features]);
+    useEffect(initialize, [features, filter]);
 
     return (
         <div className='map-container'>
             <div className='tooltip' ref={tooltipElement}></div>
 
             <div className='map-tools'>
-                <h3>Настройки отображения</h3>
+                <h3 style={{margin: 0}}>Настройки отображения</h3>
 
-                <br />
+                <FormControl className="form">
+                    {
+                        Object.keys(features).map((v) =>
+                            <FormControlLabel label={v} control={<Checkbox defaultChecked color="custom" style={{ color: "#62A744" }} />} onChange={() => {
+                                let newFilter = { ...filter };
+                                newFilter[v] = filter[v] == null ? false : !filter[v];
+                                setFilter(newFilter);
+                            }} />
+                        )
+                    }
+
+                    <br />
+                </FormControl>
 
                 <Button text="Обновить" onClick={reload} isOnBright={true} />
             </div>

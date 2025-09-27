@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ReactComponent as Menu } from '../../static/images/menu.svg';
 import '../../static/styles/AdminHeader.css';
 
+// Меню панели администратора. Отображается слева
 export const AdminHeader = () => {
     const [isNavOpened, setIsNavOpened] = useState(false);
 

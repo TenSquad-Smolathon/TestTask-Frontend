@@ -5,7 +5,9 @@ import { LoadingPlaceholder } from "../../widgets/LoadingPlaceholder";
 import axios from "axios";
 import Markdown from "react-markdown";
 import { Button } from "../../widgets/Button";
+import '../../static/styles/Vacancies.css';
 
+// Страница вакансий
 export const Vacancies = () => {
     // vacancies format
     // [
@@ -49,8 +51,8 @@ export const Vacancies = () => {
                             vacancies.map((val, i, arr) => (
                                 <div className="vacancy">
                                     <h3>{val.title}</h3>
-                                    <p>{val.desctiption}</p>
-                                    <Markdown>{val.requirements}</Markdown>
+                                    <p>{val.description}</p>
+                                    Требования: <Markdown>{val.requirements}</Markdown>
                                     <h5>{val.payout}</h5>
 
                                     <Button isAccent={true} onClick={() => {
@@ -60,7 +62,7 @@ export const Vacancies = () => {
                             ))
                         }
                     </div>
-                </div> : <FailedPlaceholder retry={() => console.log("retrying") || load() || setIsLoaded(false)}>вакансии</FailedPlaceholder>}
+                </div> : <FailedPlaceholder retry={() => setIsLoaded(false) || load()}>вакансии</FailedPlaceholder>}
             </div> : <LoadingPlaceholder>вакансии</LoadingPlaceholder>}
         </div>
     );

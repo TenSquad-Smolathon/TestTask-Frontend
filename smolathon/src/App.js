@@ -10,6 +10,7 @@ import { AdminOrders } from './views/admin/Orders';
 import { AdminStats } from './views/admin/Stats';
 import { AdminMaps } from './views/admin/Maps';
 import { AdminImport } from './views/admin/Import';
+import { AdminInsert } from './views/admin/Insert';
 
 import { Landing } from './views/Landing';
 import { Articles } from './views/Articles';
@@ -23,10 +24,11 @@ import { Contacts } from './views/other/Contacts';
 import { Vacancies } from './views/other/Vacancies';
 import { Documents } from './views/other/Documents';
 
+
 import './static/styles/App.css';
-import { AdminInsert } from './views/admin/Insert';
 
 
+// path for services
 const services = [
   <Route path="/services/accidents-map" element={<AccidentsMap />} />,
   <Route path="/services/stats" element={<Stats />} />
@@ -61,12 +63,16 @@ function App() {
           <Route path="/vacancies" element={<Vacancies />} />
           <Route path="/documents" element={<Documents />} />
 
+          {/* For viewing projects */}
           <Route path="/project/:name" element={<Project />} />
+          
+          {/* For viewing services */}
           <Route path="/services/:name" element={<Services />} />,
 
           {services}
           {admins}
 
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>

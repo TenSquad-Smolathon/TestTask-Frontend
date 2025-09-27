@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../providers/authProvider";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../static/styles/Login.css';
 
+// Страница для входа в админ-панель
 export const Login = () => {
     const [input, setInput] = useState({ username: '', password: '' });
     const { loginAction } = useAuth();

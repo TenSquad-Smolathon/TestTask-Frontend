@@ -7,7 +7,7 @@ import Dropdown from './DropdownMenu';
 import axios from 'axios';
 import '../static/styles/Header.css';
 
-
+// Шапка
 export const Header = () => {
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ export const Header = () => {
         }
 
         try {
-            const result = await axios.get("/services");
+            const result = await axios.get("/content/services");
             setServices(result.data);
         } catch (e) {
             console.log(`Error while fetching projects: ${e}`);
@@ -58,13 +58,13 @@ export const Header = () => {
             <div className={`nav ${isNavOpened ? "nav-opened" : ""}`}>
                 <Dropdown value="Проекты" options={[
                     ...projects.map((val, i, arr) => <Button text={val.name} onClick={() => navigate(`/project/${val.id}`)} />),
-                    <Button text="Карта аварий" onClick={() => navigate("/services/accidents-map")} />,
+                    <Button text="Интерактивная карта" onClick={() => navigate("/services/accidents-map")} />,
                     <Button text="Статистика" onClick={() => navigate("/services/stats")} />,
                 ]} />
 
                 <Dropdown value="Услуги" options={
                     services.map((val, i, arr) =>
-                        <Button text={val.name} onClick={() => navigate(`/services/${val.id}`)} />
+                        <Button text={val.title} onClick={() => navigate(`/services/${val.id}`)} />
                     )
                 } />
 
@@ -76,8 +76,8 @@ export const Header = () => {
 
                 <Button text="Новости" isOnBright={true} onClick={() => navigate("/news")} />
                 <Button text="Статьи" isOnBright={true} onClick={() => navigate("/articles")} />
-
                 <Button text="О ЦОДД" isOnBright={true} onClick={() => navigate("/about")} />
+                <Button text="Главная" isOnBright={true} onClick={() => navigate("/")} />
             </div>
 
             <Menu style={{ width: "40px", height: "40px" }} className='menu-button' onClick={(e) => { setIsNavOpened(!isNavOpened) }} />

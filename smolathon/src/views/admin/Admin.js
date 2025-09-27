@@ -1,7 +1,7 @@
 import { AdminHeader } from './Header';
 import '../../static/styles/Admin.css';
 
-
+// Главная страница панели администратора
 export const Admin = () => {
     return (
         <div className='admin-root'>

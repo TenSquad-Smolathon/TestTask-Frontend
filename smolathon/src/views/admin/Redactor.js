@@ -4,6 +4,7 @@ import { Button } from '../../widgets/Button';
 import axios from 'axios';
 import '../../static/styles/Redactor.css';
 
+// random string generator
 const generateRandomString = (n) => {
     const s = "1234567890abcdefghijkopqrstuvwxyz";
     let res = "";
@@ -13,12 +14,18 @@ const generateRandomString = (n) => {
     return res;
 }
 
+// page types
 class Type {
     static PROJECT = 0
     static NEW = 1
     static ARTICLE = 2
+    static SERVICE = 3
+    static CONTACT = 4
+    static DOCUMENT = 5
+    static VACANCY = 6
 }
 
+// API mappings
 class API {
     async add_project({ name, description }) {
         await axios.post("/projects/", {
@@ -41,7 +48,7 @@ class API {
 
 
     async add_new({ name, short_desc, text }) {
-        await axios.post("/news/", {
+        await axios.post("/content/news/", {
             name,
             short_desc,
             text
@@ -49,7 +56,7 @@ class API {
     }
 
     async edit_new({ id, name, short_desc, text }) {
-        await axios.patch(`/news/${id}/`, {
+        await axios.patch(`/content/news/${id}/`, {
             name,
             short_desc,
             text
@@ -57,14 +64,12 @@ class API {
     }
 
     async delete_new({ id }) {
-        await axios.delete(`/news/${id}`, {
-            id
-        });
+        await axios.delete(`/content/news/${id}`);
     }
 
 
     async add_article({ name, short_desc, text }) {
-        await axios.post("/articles/", {
+        await axios.post("/content/articles/", {
             name,
             short_desc,
             text
@@ -72,7 +77,7 @@ class API {
     }
 
     async edit_article({ id, name, short_desc, text }) {
-        await axios.patch(`/articles/${id}/`, {
+        await axios.patch(`/content/articles/${id}/`, {
             name,
             short_desc,
             text
@@ -80,20 +85,160 @@ class API {
     }
 
     async delete_article({ id }) {
-        await axios.delete(`/articles/${id}`, {
-            id
+        await axios.delete(`/content/articles/${id}/`);
+    }
+
+
+    async add_contact({
+        name,
+        phone,
+        email
+    }) {
+        await axios.post("/content/contacts/", {
+            name,
+            phone,
+            email,
+            image_path: "",
         });
+    }
+
+    async edit_contact({
+        id,
+        name,
+        phone,
+        email
+    }) {
+        await axios.patch(`/content/contacts/${id}/`, {
+            name,
+            phone,
+            email,
+            image_path: "",
+        });
+    }
+
+    async delete_contact({ id }) {
+        await axios.delete(`/content/contacts/${id}/`);
+    }
+
+
+    async add_service({
+        title,
+        short_desc,
+        desc,
+        text,
+        inputs,
+        action_text,
+    }) {
+        await axios.post("/content/services/", {
+            title,
+            short_desc,
+            desc,
+            text,
+            inputs: inputs,
+            action_text,
+        });
+    }
+
+    async edit_service({
+        id,
+        title,
+        short_desc,
+        desc,
+        text,
+        inputs,
+        action_text,
+    }) {
+        await axios.patch(`/content/services/${id}/`, {
+            title,
+            short_desc,
+            desc,
+            text,
+            inputs,
+            action_text,
+        });
+    }
+
+    async delete_service({ id }) {
+        await axios.delete(`/content/services/${id}/`);
+    }
+
+    async add_document({
+        name,
+        link
+    }) {
+        await axios.post("/content/documents/", {
+            name,
+            link,
+        });
+    }
+
+    async edit_document({
+        id,
+        name,
+        text,
+    }) {
+        await axios.patch(`/content/documents/${id}/`, {
+            name,
+            text,
+        });
+    }
+
+    async delete_document({ id }) {
+        await axios.delete(`/content/documents/${id}/`);
+    }
+
+
+    async add_vacancy({
+        title,
+        description,
+        requirements,
+        payout,
+    }) {
+        await axios.post("/content/vacancies/", {
+            title,
+            description,
+            requirements,
+            payout,
+        });
+    }
+
+    async edit_vacancy({
+        id,
+        title,
+        description,
+        requirements,
+        payout,
+    }) {
+        await axios.patch(`/content/vacancies/${id}/`, {
+            title,
+            description,
+            requirements,
+            payout,
+        });
+    }
+
+    async delete_vacancy({ id }) {
+        await axios.delete(`/content/vacancies/${id}/`);
     }
 }
 
+// Редактор страниц
 export const AdminRedactor = () => {
     const [news, setNews] = useState([]);
     const [articles, setArticles] = useState([]);
     const [projects, setProjects] = useState([]);
+    const [services, setServices] = useState([]);
+    const [contacts, setContacts] = useState([]);
+    const [documents, setDocuments] = useState([]);
+    const [vacancies, setVacancies] = useState([]);
     const [searchTerms, setSearchTerms] = useState({
         news: "",
         articles: "",
-        projects: ""
+        projects: "",
+        services: "",
+        contacts: "",
+        documents: "",
+        vacancies: "",
     });
     const [currentCreatingMode, setCurrentCreatingMode] = useState({
         isOpened: false,
@@ -105,7 +250,7 @@ export const AdminRedactor = () => {
 
     const loadNews = async () => {
         try {
-            const result = await axios.get("/news/");
+            const result = await axios.get("/content/news/");
             setNews(result.data);
         } catch (e) {
             console.log(`Error occured while loading news: ${e}`);
@@ -115,7 +260,7 @@ export const AdminRedactor = () => {
 
     const loadArticles = async () => {
         try {
-            const result = await axios.get("/articles/");
+            const result = await axios.get("/content/articles/");
             setArticles(result.data);
         } catch (e) {
             console.log(`Error occured while loading articles: ${e}`);
@@ -133,6 +278,46 @@ export const AdminRedactor = () => {
         }
     }
 
+    const loadServices = async () => {
+        try {
+            const result = await axios.get("/content/services/");
+            setServices(result.data);
+        } catch (e) {
+            console.log("Error occurde while loading services:", e);
+            setServices([]);
+        }
+    }
+
+    const loadContacts = async () => {
+        try {
+            const result = await axios.get("/content/contacts/");
+            setContacts(result.data);
+        } catch (e) {
+            console.log("Error occurde while loading contacts:", e);
+            setContacts([]);
+        }
+    }
+
+    const loadDocuments = async () => {
+        try {
+            const result = await axios.get("/content/documents");
+            setDocuments(result.data);
+        } catch (e) {
+            console.log("Error occurde while loading documents:", e);
+            setDocuments([]);
+        }
+    }
+
+    const loadVacancies = async () => {
+        try {
+            const result = await axios.get("/content/vacancies");
+            setVacancies(result.data);
+        } catch (e) {
+            console.log("Error occurde while loading vacancies:", e);
+            setVacancies([]);    
+        }
+    }
+
     const containsTerm = (val, term) => {
         return Object.values(val).join('').toLowerCase().includes(term.toLowerCase());
     }
@@ -141,6 +326,10 @@ export const AdminRedactor = () => {
         loadNews();
         loadArticles();
         loadProjects();
+        loadServices();
+        loadContacts();
+        loadDocuments();
+        loadVacancies();
     }, []);
 
     return (
@@ -161,11 +350,21 @@ export const AdminRedactor = () => {
 
                 <div className='rd__news-wrapper'>
                     <h2>Новости</h2>
-                    {/* TODO: make an Create logic */}
                     <input placeholder='Поиск...' name="rd__news-search" onInput={(e) => setSearchTerms({
                         ...searchTerms, news: e.target.value,
                     })} />
-                    <input type='button' value="Создать" />
+                    <input type='button' value="Создать" onClick={() => {
+                        setCurrentCreatingMode({
+                            isOpened: true,
+                            type: Type.NEW,
+                            reload: loadNews,
+                            template: {
+                                name: "",
+                                short_desc: "",
+                                text: "",
+                            }
+                        });
+                    }} />
 
                     <div className='rd__news rd__row'>
                         {
@@ -178,11 +377,21 @@ export const AdminRedactor = () => {
 
                 <div className='rd__articles-wrapper'>
                     <h2>Статьи</h2>
-                    {/* TODO: make an Create logic */}
                     <input placeholder='Поиск...' name="rd__articles-search" onInput={(e) => setSearchTerms({
                         ...searchTerms, articles: e.target.value,
                     })} />
-                    <input type='button' value="Создать" />
+                    <input type='button' value="Создать" onClick={() => {
+                        setCurrentCreatingMode({
+                            isOpened: true,
+                            type: Type.ARTICLE,
+                            reload: loadArticles,
+                            template: {
+                                name: "",
+                                short_desc: "",
+                                text: "",
+                            }
+                        });
+                    }} />
 
                     <div className='rd__articles rd__row'>
                         {
@@ -218,11 +427,124 @@ export const AdminRedactor = () => {
                         }
                     </div>
                 </div>
+
+                <div className='rd__projects-wrapper'>
+                    <h2>Сервисы</h2>
+                    <input placeholder='Поиск...' name='rd__projects-search' onInput={(e) => setSearchTerms({
+                        ...searchTerms, services: e.target.value,
+                    })} />
+                    <input type='button' value="Создать" onClick={() => {
+                        setCurrentCreatingMode({
+                            isOpened: true,
+                            type: Type.SERVICE,
+                            reload: loadServices,
+                            template: {
+                                title: "",
+                                short_desc: "",
+                                desc: "",
+                                text: "",
+                                inputs: "",
+                                action_text: "",
+                            }
+                        });
+                    }} />
+
+                    <div className='rd__projects rd__row'>
+                        {
+                            services.map(
+                                (val) => containsTerm(val, searchTerms.services) && <RDPage api={api} reload={loadServices} type={Type.SERVICE}>{val}</RDPage>
+                            )
+                        }
+                    </div>
+                </div>
+
+                <div className='rd__projects-wrapper'>
+                    <h2>Контакты</h2>
+                    <input placeholder='Поиск...' name='rd__projects-search' onInput={(e) => setSearchTerms({
+                        ...searchTerms, contacts: e.target.value,
+                    })} />
+                    <input type='button' value="Создать" onClick={() => {
+                        setCurrentCreatingMode({
+                            isOpened: true,
+                            type: Type.CONTACT,
+                            reload: loadContacts,
+                            template: {
+                                name: "",
+                                phone: "",
+                                email: "",
+                            }
+                        });
+                    }} />
+
+                    <div className='rd__projects rd__row'>
+                        {
+                            contacts.map(
+                                (val) => containsTerm(val, searchTerms.contacts) && <RDPage api={api} reload={loadContacts} type={Type.CONTACT}>{val}</RDPage>
+                            )
+                        }
+                    </div>
+                </div>
+
+                <div className='rd__projects-wrapper'>
+                    <h2>Документы</h2>
+                    <input placeholder='Поиск...' name='rd__projects-search' onInput={(e) => setSearchTerms({
+                        ...searchTerms, documents: e.target.value,
+                    })} />
+                    <input type='button' value="Создать" onClick={() => {
+                        setCurrentCreatingMode({
+                            isOpened: true,
+                            type: Type.DOCUMENT,
+                            reload: loadDocuments,
+                            template: {
+                                name: "",
+                                link: "",
+                            }
+                        });
+                    }} />
+
+                    <div className='rd__projects rd__row'>
+                        {
+                            documents.map(
+                                (val) => containsTerm(val, searchTerms.documents) && <RDPage api={api} reload={loadDocuments} type={Type.DOCUMENT}>{val}</RDPage>
+                            )
+                        }
+                    </div>
+                </div>
+
+                <div className='rd__projects-wrapper'>
+                    <h2>Вакансии</h2>
+                    <input placeholder='Поиск...' name='rd__projects-search' onInput={(e) => setSearchTerms({
+                        ...searchTerms, vacancies: e.target.value,
+                    })} />
+                    <input type='button' value="Создать" onClick={() => {
+                        setCurrentCreatingMode({
+                            isOpened: true,
+                            type: Type.VACANCY,
+                            reload: loadVacancies,
+                            template: {
+                                title: "",
+                                description: "",
+                                payout: "",
+                                requirements: "",
+                            }
+                        });
+                    }} />
+
+                    <div className='rd__projects rd__row'>
+                        {
+                            vacancies.map(
+                                (val) => containsTerm(val, searchTerms.vacancies) && <RDPage api={api} reload={loadVacancies} type={Type.VACANCY}>{val}</RDPage>
+                            )
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
 
+
+// viewing/editing tool
 const RDPage = ({ children: val, api, reload, type, isCreating = false, isOpened = false, close = () => { } }) => {
     const [isEditorOpened, setIsEditorOpened] = useState(false);
     const [randomId, _] = useState(generateRandomString(5));
@@ -237,6 +559,7 @@ const RDPage = ({ children: val, api, reload, type, isCreating = false, isOpened
         }
 
         console.log(values);
+        console.log(type);
 
         switch (type) {
             case Type.ARTICLE:
@@ -262,18 +585,51 @@ const RDPage = ({ children: val, api, reload, type, isCreating = false, isOpened
                     await api.edit_project({ ...values, id: val.id });
                 }
                 break;
+
+            case Type.SERVICE:
+                if (isCreating) {
+                    await api.add_service(values);
+                } else {
+                    await api.edit_service({ ...values, id: val.id });
+                }
+                break;
+
+            case Type.CONTACT:
+                if (isCreating) {
+                    await api.add_contact(values);
+                } else {
+                    await api.edit_contact({ ...values, id: val.id });
+                }
+                break;
+
+            case Type.DOCUMENT:
+                if (isCreating) {
+                    await api.add_document(values);
+                } else {
+                    await api.edit_document({ ...values, id: val.id });
+                }
+                break;
+
+            case Type.VACANCY:
+                if (isCreating) {
+                    await api.add_vacancy(values);
+                } else {
+                    await api.edit_vacancy({ ...values, id: val.id });
+                }
+                break;
         }
     }
 
     return (<div className='rd__page'>
-        {!isCreating && <h2>{val.name}</h2>}
+        {!isCreating && <h2>{val.name ?? val.title}</h2>}
 
         {!isCreating && <Button text="Редактировать" isAccent onClick={() => {
             setIsEditorOpened(true);
         }} />}
 
         {!isCreating && <Button text="Удалить" isOnBright onClick={() => {
-            api.delete_project({ id: val.id }).then(reload);
+            [api.delete_project, api.delete_new, api.delete_article, api.delete_service,
+            api.delete_contact, api.delete_document, api.delete_vacancy][type]({ id: val.id }).then(reload);
         }} />}
 
         {
@@ -300,11 +656,12 @@ const RDPage = ({ children: val, api, reload, type, isCreating = false, isOpened
                 {/* TODO: make a creating and saving algos */}
 
                 <Button text={"Сохранить"} isAccent onClick={() => {
-                    save().then(() => {
-                        setIsEditorOpened(false);
-                        close();
-                        reload();
-                    }, (r) => { });
+                    save()
+                        .then(() => {
+                            setIsEditorOpened(false);
+                            close();
+                            reload();
+                        }, (r) => { console.log(r) });
                 }} />
             </div>
         }

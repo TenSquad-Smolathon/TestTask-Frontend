@@ -6,17 +6,15 @@ import { FailedPlaceholder } from "../widgets/FailedPlaceholder";
 import { LoadingPlaceholder } from "../widgets/LoadingPlaceholder";
 import { Header } from "../widgets/Header";
 
+// Страница отображения проекта
 export const Project = () => {
     const { name } = useParams();
-    const [ projectData, setProjectData ] = useState(null);
-    const [ isLoaded, setIsLoaded ] = useState(false);
+    const [projectData, setProjectData] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const load = async () => {
         try {
             const result = await axios.get(`/projects/${name}`);
-            console.log(result);
-            // TODO: fix that so only one project is selected
-
             setProjectData(result.data);
         } catch (e) {
             console.log(`Error occured while fetching project data: ${e}`);
@@ -28,12 +26,12 @@ export const Project = () => {
 
     useEffect(() => {
         load();
-    }, []);
+    }, [name]);
 
     return (
         <div>
             <Header />
-            <div style={{ height: "20px" }} />
+            <div style={{ height: "70px" }} />
 
             {isLoaded ? <div className="content">
                 {projectData != null ? <div className="myContent">

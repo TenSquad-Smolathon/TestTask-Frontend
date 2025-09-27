@@ -3,7 +3,9 @@ import { Header } from "../../widgets/Header";
 import { FailedPlaceholder } from "../../widgets/FailedPlaceholder";
 import { LoadingPlaceholder } from "../../widgets/LoadingPlaceholder";
 import axios from "axios";
+import '../../static/styles/Contacts.css';
 
+// Страница контактов
 export const Contacts = () => {
     // contacts format
     // [
@@ -52,7 +54,7 @@ export const Contacts = () => {
                             ))
                         }
                     </div>
-                </div> : <FailedPlaceholder retry={() => console.log("retrying") || load() || setIsLoaded(false)}>контакты</FailedPlaceholder>}
+                </div> : <FailedPlaceholder retry={() => setIsLoaded(false) || load()}>контакты</FailedPlaceholder>}
             </div> : <LoadingPlaceholder>контакты</LoadingPlaceholder>}
         </div>
     );

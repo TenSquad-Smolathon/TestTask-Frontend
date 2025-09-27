@@ -21,6 +21,8 @@ function randomRGB() {
     return `rgb(${x}, ${y}, ${z})`;
 }
 
+
+// Страница статистики (общие данные, без экономики)
 export const Stats = () => {
     // CHARTS FMT:
     /*
@@ -47,8 +49,9 @@ export const Stats = () => {
 
     const load = async () => {
         try {
-            const result = await axios.get("/public-charts");
-            setCharts(result);
+            const result = await axios.get("/analytics/stats");
+            setCharts(result.data);
+            setSearchedCharts(result.data);
         } catch (e) {
             setCharts(null);
             console.log(`Error while fetching charts: ${e}`);
@@ -74,7 +77,7 @@ export const Stats = () => {
     }, []);
 
     useEffect(() => {
-        if (charts) applySearch();
+        if (charts != null) applySearch();
     }, [searchTerm]);
 
     return (
@@ -84,14 +87,14 @@ export const Stats = () => {
             <Header />
 
             {
-                isLoaded ? charts != null ? <div className="content">
+                isLoaded ? charts != null && searchedCharts != null ? <div className="content">
                     <h1>Статистика</h1>
                     <p>Открытые статистические данные для исследований и аналитики</p>
 
                     <input placeholder="Поиск..." type="search" onChange={(e) => setSearchTerm(e.target.value)}></input>
 
                     <div className="graphs-grid">
-                        {searchedCharts.map((val, ind, arr) => <GraphWrapper>{val}</GraphWrapper>)}
+                        {searchedCharts.map((val, ind, arr) => val["public"] && <GraphWrapper>{val}</GraphWrapper>)}
                     </div>
                 </div> : <FailedPlaceholder retry={() => console.log("retrying") || setIsLoaded(false) || load()}>статистику</FailedPlaceholder> : <LoadingPlaceholder>статистику</LoadingPlaceholder>
             }
@@ -99,6 +102,7 @@ export const Stats = () => {
     );
 }
 
+// Raw graph with no controls
 export const Graph = ({ children: val, gridEnabled = true, axesEnabled = true, legendEnabled = true, interpolate = true, gRef }) => {
     const [colors, setColors] = useState({});
 
@@ -164,6 +168,8 @@ export const Graph = ({ children: val, gridEnabled = true, axesEnabled = true, l
     }
 }
 
+// Wrapper graph with controls and data exporting
+// TODO: add filtering by x-value
 export const GraphWrapper = ({ children, admin = false, isInMatching = false, addInMatching = (v) => { } }) => {
     const [enableGrid, setEnableGrid] = useState('on');
     const [enableAxes, setEnableAxes] = useState('on');
@@ -215,7 +221,7 @@ export const GraphWrapper = ({ children, admin = false, isInMatching = false, ad
 
     // Converts current data to CSV values String
     const toCSV = () => {
-        let data = 'month';
+        let data = children['x_axis_name']
         let sum_y = {}
 
         for (var field of children.fields) {
@@ -411,5 +417,3 @@ export const GraphWrapper = ({ children, admin = false, isInMatching = false, ad
         </div>
     );
 }
-
-// TODO: add filtering by x-value

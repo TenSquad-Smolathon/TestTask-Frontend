@@ -3,6 +3,7 @@ import RoadImage from "../static/images/road.webp";
 import { ReactComponent as Logo } from '../static/images/logo.svg';
 import '../static/styles/About.css';
 
+// Страница "О ЦОДД"
 export const About = () => {
     return (
         <div>
@@ -20,8 +21,6 @@ export const About = () => {
                         <h1>Мы работаем для вашего комфорта и безопасности на дорогах</h1>
                         <br />
                     </div>
-
-
 
                     <div>
                         <h3>Добро пожаловать на страницу Центра организации дорожного движения Смоленской области!</h3>
