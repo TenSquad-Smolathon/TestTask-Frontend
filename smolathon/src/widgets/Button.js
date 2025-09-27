@@ -1,8 +1,9 @@
 import '../static/styles/Button.css';
 
-export const Button = ({ text, isAccent = false, isOnBright = false, onClick = (e) => {} }) => {
+// Button
+export const Button = ({ text, className = "", isAccent = false, isOnBright = false, onClick = (e) => {} }) => {
     return (
-        <div onClick={onClick} className={isAccent ? "button-accent" : isOnBright ? "button-dark" : "button"}>
+        <div onClick={onClick} className={(isAccent ? "button-accent" : isOnBright ? "button-dark" : "button") + ` ${className}`}>
             <p>{ text }</p>
         </div>
     );

@@ -1,36 +1,27 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Header } from "../widgets/Header";
-import { CircularProgress } from "@mui/material";
-import '../static/styles/Article.css';
 import { Button } from "../widgets/Button";
-import TestImage from "../static/images/road.jpg";
+import { LoadingPlaceholder } from "../widgets/LoadingPlaceholder";
+import { FailedPlaceholder } from "../widgets/FailedPlaceholder";
+import { NewReader } from "./News";
+import '../static/styles/Article.css';
+import '../static/styles/News.css';
 
+// Страница статей
 export const Articles = () => {
     const [isLoaded, setIsLoaded] = useState(false);
-    const [articles, setArticles] = useState([
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-        {title: "Hello, world", short_desc: "Really short description", image_src: TestImage},
-    ]);
+    const [articles, setArticles] = useState(null);
 
     const load = async () => {
         console.log("Loading!");
 
         try {
-            const result = await axios.get("/articles");
+            const result = await axios.get("/content/articles/");
             setArticles(result.data);
         } catch (e) {
             console.log(`Exception while fetching articles: ${e}`);
+            setArticles(null);
         }
 
         setIsLoaded(true);
@@ -38,11 +29,12 @@ export const Articles = () => {
 
     useEffect(() => {
         load();
-    }, [isLoaded, articles]);
+    }, []);
 
     return (
         <div className="articles-container">
-            <Header></Header>
+            <Header />
+            <div style={{ height: "70px" }} />
 
             {isLoaded ? <div className="content">
                 {articles != null ? <div className="myContent">
@@ -50,26 +42,31 @@ export const Articles = () => {
                     <div className="articles">
                         {articles.map((val, index, arr) => <Article val={val} />)}
                     </div>
-                </div> : <div className="loading">
-                    <p>Не удалось загрузить 😔</p>
-                    <Button text="Повторить попытку" onClick={() => load() && setIsLoaded(false)}></Button>
-                </div>}
-            </div> : <div className="loading">
-                <CircularProgress color="black" />
-                <p>Загружаем статьи...</p>
-            </div>}
+                </div> : <FailedPlaceholder retry={() => console.log("retrying") || load() || setIsLoaded(false)}>статьи</FailedPlaceholder>}
+            </div> : <LoadingPlaceholder>статьи</LoadingPlaceholder>}
         </div>
     );
 }
 
-const Article = ({val}) => {
-    return (
-        <div className="article">
-            <img src={val.image_src}></img>
-            <h1 className="heading">{val.title}</h1>
-            <p className="heading">{val.short_desc}</p>
+const Article = ({ val }) => {
+    const [isOpened, setIsOpened] = useState(false);
 
-            <Button text="Читать"></Button>
+    return (
+        <div>
+            <div className="article">
+                <img src={val.image_src} style={{ minHeight: "200px", minWidth: "200px", background: "lightgray" }} ></img>
+
+                <div style={{ height: "10px" }} />
+
+                <h1 className="heading">{val.name}</h1>
+                <p className="heading">{val.short_desc}</p>
+
+                <div style={{ height: "10px" }} />
+
+                <Button isAccent={true} text="Читать" onClick={() => setIsOpened(!isOpened)}></Button>
+            </div>
+
+            {isOpened && <NewReader close={() => setIsOpened(false)}>{val}</NewReader>}
         </div>
     );
 };

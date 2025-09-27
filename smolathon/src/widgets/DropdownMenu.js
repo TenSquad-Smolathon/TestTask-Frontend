@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import '../static/styles/Dropdown.css'; // We'll create this next
 
+// Dropdown-selector
 const Dropdown = ({
     options = [],
     value = "Dropdown",
@@ -17,8 +18,8 @@ const Dropdown = ({
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
     return (

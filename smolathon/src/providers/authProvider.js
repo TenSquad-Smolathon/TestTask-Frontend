@@ -5,36 +5,28 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem('token') ?? '');
+    const [token, setToken] = useState(localStorage.getItem('access-token') ?? '');
+    const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refresh-token') ?? '');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const initAuth = async () => {
-            return;
-            
-            if (token) {
+            if (refreshToken) {
+                console.log("Trying refresh");
+
                 try {
-                    // Verify token with backend
-                    const response = await fetch('/api/verify-token/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
+                    const response = await axios.post("/token/refresh/", {
+                        "refresh": refreshToken
                     });
 
-                    if (response.ok) {
-                        const userData = await response.json();
-                        setUser(userData);
-                    } else {
-                        // Token is invalid
-                        localStorage.removeItem('token');
-                        setToken('');
-                    }
+                    setToken(response.data.access);
+                    localStorage.setItem('access-token', response.data.access);
                 } catch (error) {
                     console.error('Token verification failed:', error);
-                    localStorage.removeItem('token');
+                    localStorage.removeItem('access-token');
+                    localStorage.removeItem('refresh-token');
                     setToken('');
+                    setRefreshToken('');
                 }
             }
             setLoading(false);
@@ -44,55 +36,34 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const loginAction = async (data) => {
-        setToken("TOKEN"); // TODO: REMOVE
-        localStorage.setItem("token", "TOKEN!");
-        return token != null;
-
         try {
-            const response = await axios.post('/api/login', data);
+            const response = await axios.post('/token/', data);
             const res = response.data;
 
-            if (res.success) {
-                setToken(res.token);
-                localStorage.setItem("token", res.token);
-            }
+            setRefreshToken(res.refresh);
+            setToken(res.access);
+
+            localStorage.setItem("refresh-token", res.refresh);
+            localStorage.setItem("access-token", res.access);
+
+            return true;
         } catch (e) {
             console.log(`Error while trying to auth: ${e}`)
         }
+
+        return false;
     }
-
-    const registerAction = async (userData) => {
-        try {
-            const response = await fetch('/api/register/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData),
-            });
-
-            const res = await response.json();
-
-            if (res.success) {
-                setToken(res.token);
-                setUser(res.user);
-                localStorage.setItem('token', res.token);
-                return { success: true };
-            } else {
-                return { success: false, error: res.message };
-            }
-        } catch (err) {
-            console.error('Registration error:', err);
-            return { success: false, error: 'Network error' };
-        }
-    };
 
     const logOut = () => {
         setUser(null);
         setToken('');
-        localStorage.removeItem('token');
+        setRefreshToken('');
+        localStorage.removeItem('access-token');
+        localStorage.removeItem('refresh-token');
     }
 
     return (
-        <AuthContext.Provider value={{ token, user, loading, loginAction, registerAction, logOut, isAuthentificated: !!token }}>
+        <AuthContext.Provider value={{ token, refreshToken, user, loading, loginAction, logOut, isAuthentificated: !!token }}>
             {children}
         </AuthContext.Provider>
     );

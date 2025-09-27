@@ -1,0 +1,242 @@
+:root {
+    --about-background-size: 50%;
+}
+
+.first-p {
+    width: 100%;
+    height: calc(100vh - 60px);
+    background-color: black;
+    color: #fff;
+
+    display: flex;
+    flex-direction: row;
+
+    overflow: hidden;
+
+    align-items: center;
+}
+
+.first-p .texts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 5;
+    width: 40%;
+}
+
+.first-p .bg {
+    overflow: hidden;
+
+    z-index: 4;
+    width: 100%;
+    height: calc(100% - 60px);
+    position: absolute;
+    background-size: contain;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+
+    mask-image: linear-gradient(-80deg,
+            black var(--about-background-size),
+            transparent calc(var(--about-background-size) + 0.01%));
+}
+
+.first-p .texts .crossline {
+    margin: 40px 0;
+    /* margin-left: 20px; */
+    width: 120%;
+    height: auto;
+
+    transform: rotateZ(180deg);
+    /* align-self: center; */
+}
+
+.first-p .texts .logo {
+    margin-left: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.first-p .texts .logo * {
+    margin: 0;
+    padding: 0;
+}
+
+.first-p .texts h3,
+.first-p .texts p {
+    margin-bottom: 10px;
+}
+
+.first-p .texts h3 {
+    font-size: 1.1srem;
+}
+
+@media screen and (max-width: 1200px) {
+    .first-p {
+        align-items: start;
+    }
+
+    .first-p .texts {
+        align-items: center;
+        padding: 20px;
+        flex-direction: row;
+        width: 100%;
+        height: 50%;
+    }
+
+    .first-p .bg {
+        mask-image: linear-gradient(0deg,
+                black var(--about-background-size),
+                transparent calc(var(--about-background-size) + 0.01%));
+    }
+
+    .first-p .texts .crossline {
+        /* transform: rotateZ(-90deg); */
+        display: none;
+    }
+}
+
+
+@media screen and (max-width: 700px) {
+    .first-p .texts div:last-child {
+        display: none;
+    }
+}
+
+/*  */
+
+.second-p {
+    width: 100%;
+    /* height: calc(100vh - 60px); */
+    height: max-content;
+    padding: 200px 0;
+    background-color: black;
+    color: #fff;
+
+    display: flex;
+    flex-direction: row;
+
+    overflow: hidden;
+    align-items: center;
+
+    justify-content: center;
+}
+
+.second-p .left-side {
+    max-width: 40%;
+}
+
+.second-p .left-side h1 {
+    margin-bottom: 10px;
+}
+
+.second-p .grid {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 0.5fr);
+    column-gap: 30px;
+    row-gap: 70px;
+    padding: 10px 50px;
+}
+
+.second-p .grid .grid-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+
+    padding: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-image: linear-gradient(70deg, #62a744 10%, black 30%) 1;
+}
+
+@media screen and (max-width: 1150px) {
+    .second-p {
+        gap: 40px;
+        flex-direction: column;
+    }
+
+    .second-p .left-side {
+        max-width: 90%;
+    }
+
+    .second-p .grid {
+        grid-template-rows: repeat(1, 1fr);
+        grid-template-columns: repeat(4, 0.5fr);
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .second-p {
+        padding: 100px 0;
+    }
+
+    .second-p .grid {
+        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 0.5fr);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .second-p {
+        padding: 60px 0;
+    }
+
+    .second-p .grid {
+        row-gap: 20px;
+        grid-template-rows: repeat(4, 1fr);
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/*  */
+
+.third-p {
+    width: 100%;
+    /* height: calc(100vh - 60px); */
+    height: max-content;
+    padding: 200px 0;
+    background-color: black;
+    color: #fff;
+
+    display: flex;
+    flex-direction: row;
+
+    overflow: hidden;
+    align-items: center;
+
+    justify-content: space-around;
+}
+
+.third-p .grid {
+    padding: 0px 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 60%;
+}
+
+.third-p .grid .grid-item {
+    padding: 20px 0;
+    background-image: linear-gradient(0deg, #62a744 0px, black 10px);
+}
+
+.third-p .grid .grid-item * {
+    margin: 0;
+    margin-bottom: 10px;
+
+}
+@media screen and (max-width: 650px) {
+    .third-p {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .third-p h1 {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+}
