@@ -23,6 +23,7 @@ import { Project } from './views/Project';
 import { Contacts } from './views/other/Contacts';
 import { Vacancies } from './views/other/Vacancies';
 import { Documents } from './views/other/Documents';
+import { RoadsClusterization } from './views/roads-clusterization/RoadsClusterization';
 
 
 import './static/styles/App.css';
@@ -31,7 +32,8 @@ import './static/styles/App.css';
 // path for services
 const services = [
   <Route path="/services/accidents-map" element={<AccidentsMap />} />,
-  <Route path="/services/stats" element={<Stats />} />
+  <Route path="/services/stats" element={<Stats />} />,
+  <Route path="/services/clusterization" element={<RoadsClusterization />} />
 ];
 
 const admins = [
@@ -65,7 +67,7 @@ function App() {
 
           {/* For viewing projects */}
           <Route path="/project/:name" element={<Project />} />
-          
+
           {/* For viewing services */}
           <Route path="/services/:name" element={<Services />} />,
 

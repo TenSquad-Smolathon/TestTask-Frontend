@@ -59,6 +59,7 @@ export const Header = () => {
                 <Dropdown value="Проекты" options={[
                     ...projects.map((val, i, arr) => <Button text={val.name} onClick={() => navigate(`/project/${val.id}`)} />),
                     <Button text="Интерактивная карта" onClick={() => navigate("/services/accidents-map")} />,
+                    <Button text="Кластеризация" onClick={() => navigate("/services/clusterization")} />,
                     <Button text="Статистика" onClick={() => navigate("/services/stats")} />,
                 ]} />
 
